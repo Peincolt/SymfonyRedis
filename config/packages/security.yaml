@@ -8,10 +8,11 @@ security:
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            stateless: false
         main:
             lazy: true
             provider: users_in_memory
+            stateless: false
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

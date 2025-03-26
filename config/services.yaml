@@ -22,5 +22,14 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
         arguments: ['@snc_redis.session']
+
+    App\EventListener\CountUserListener:
+        arguments:
+            $client: '@snc_redis.default'
+
+    Predis\Client:
+        arguments:
+            - '%env(REDIS_URL)%'
+        public: true
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
