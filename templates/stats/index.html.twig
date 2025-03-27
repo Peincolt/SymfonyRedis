@@ -1,20 +1,120 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques Redis</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-{% block title %}Hello StatsController!{% endblock %}
+        /* Styles généraux */
+        body {
+            background-color: #1e1e1e;
+            color: white;
+            text-align: center;
+        }
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+        /* Barre de navigation */
+        .navbar {
+            background-color: #DC382D; /* Rouge Redis */
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        .container {
+            display: flex;
+            flex-direction: column; /* Organise les éléments en colonne */
+            align-items: center; /* Centre les éléments horizontalement */
+            gap: 20px; /* Espacement entre les sections */
+        }
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Code/SymfonyRedis/src/Controller/StatsController.php</code></li>
-        <li>Your template at <code>D:/Code/SymfonyRedis/templates/stats/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+        .stat-card-total {
+            display: block; /* Permet d'ajuster la largeur au contenu */
+            text-align: center;
+            width: fit-content; /* Ajuste la largeur en fonction du contenu */
+            padding: 20px;
+            background-color: #2e2e2e;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.4);
+            transition: transform 0.3s;
+            margin: 10px;
+        }
+
+        .stat-cards-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centre les cartes */
+            gap: 20px; /* Espacement entre les cartes */
+        }
+
+        .stat-card {
+            background-color: #2e2e2e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.4);
+            transition: transform 0.3s;
+            width: 250px; /* Fixe la largeur des cartes */
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-title {
+            font-size: 18px;
+            color: #DC382D;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">📊 Statistiques</div>
+    <div class="container">
+        <div class="stat-card-total">
+            <div class="stat-title">Nombre total d'utilisateurs ces dernières 24h00</div>
+            <div class="stat-value">{{total_visit}}</div>
+        </div>
+        <br/>
+        <h1>Statistiques concernant votre compte</h1>
+        <div class="stat-cards-group">
+            <div class="stat-card">
+                <div class="stat-title">Vous avez visionné : </div>
+                <div class="stat-value">{{user_stats[0]}}</div>
+                <div class="stat-title">page(s)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">Dernière page visitée</div>
+                <div class="stat-value">{{user_stats[2]}}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">Date de dernière visite</div>
+                <div class="stat-value">{{user_stats[1]|date('m/d/Y')}} à {{user_stats[1]|date('H:i')}}</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

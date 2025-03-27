@@ -2,33 +2,34 @@
 
 namespace App\Controller;
 
-use Predis\Client;
+use Predis\ClientInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class StatsController extends AbstractController
 {
+
     public function __construct(
-        private Client $client
+        private ClientInterface $client
     ) {
 
     }
 
     #[Route('/stats', name: 'app_stats')]
-    public function index(RequestStack $request): Response
+    public function index(SessionInterface $session): Response
     {
-        $ipAddress = $request->getCurrentRequest()->getClientIp();
+        $idSession = $session->getId();
         $totalVisits = $this->client->get('visit:total');
-        $userStats = $this->client->hmget('visit:'.$ipAddress,[
+        $userStats = $this->client->hmget('visit:'.$idSession,[
             'totalPage',
             'lastVisit',
             'lastPage'
         ]);
         return $this->render('stats/index.html.twig', [
-            'controller_name' => 'StatsController',
-            'user_stats' => $userStats
+            'user_stats' => $userStats,
+            'total_visit' => $totalVisits
         ]);
     }
 }

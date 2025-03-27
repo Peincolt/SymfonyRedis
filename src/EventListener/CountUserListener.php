@@ -2,15 +2,15 @@
 
 namespace App\EventListener;
 
-use Predis\Client;
+use Predis\ClientInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
-#[AsEventListener(event:ResponseEvent::class , method: 'onUserVisit')]
+#[AsEventListener(event: ResponseEvent::class, method: 'onUserVisit')]
 final class CountUserListener
 {
     public function __construct(
-        private Client $client
+        private ClientInterface $client
     ) {
     }
 
@@ -27,11 +27,8 @@ final class CountUserListener
             return;
         }
 
-        if (!$session->isStarted()) {
-            $session->start();
-        }
-
         $ipUser = $request->getClientIp();
+        $val = $session->set('test', 45);
         $idSession = $session->getId();
         // On commence les ajouts avec redis
         // On incrémente le nombre total de visite
@@ -49,4 +46,4 @@ final class CountUserListener
         // On ajoute l'adresse IP dans le set
         $this->client->sAdd('visit:ids', $ipUser);
     }
-} 
+}
