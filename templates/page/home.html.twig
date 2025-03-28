@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>Symfony & Redis</h1>
+    <p>Ce site a pour but de démontrer comment intégrer Redis avec Symfony. J'utilise Redis via les bibliothèques <strong>Predis</strong> et <strong>snc_redis</strong>.</p>
+    <p>Deux connexions Redis sont mises en place : une première pour gérer les sessions et une seconde pour stocker diverses données, notamment :</p>
+    <ul>
+        <li>Le nombre total de pages consultées par tous les utilisateurs.</li>
+        <li>Pour chaque utilisateur, les informations suivantes :
+            <ul>
+                <li>La dernière page visitée.</li>
+                <li>La date de la dernière visite.</li>
+                <li>Le nombre total de pages consultées sur le site.</li>
+            </ul>
+        </li>
+    </ul>
+    <p>L'objectif principal de ce site est de mettre en avant Redis, et non Symfony. Toute la configuration de Redis a été réalisée directement sur le serveur Redis, sans passer par des commandes ou du code Symfony.</p>
+{% endblock %}

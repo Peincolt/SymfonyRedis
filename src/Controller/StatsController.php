@@ -21,12 +21,16 @@ final class StatsController extends AbstractController
     public function index(SessionInterface $session): Response
     {
         $idSession = $session->getId();
-        $totalVisits = $this->client->get('visit:total');
-        $userStats = $this->client->hmget('visit:'.$idSession,[
-            'totalPage',
-            'lastVisit',
-            'lastPage'
-        ]);
+        try {
+            $totalVisits = $this->client->get('visit:total');
+            $userStats = $this->client->hmget('visit:'.$idSession,[
+                'totalPage',
+                'lastVisit',
+                'lastPage'
+            ]);
+        } catch (\Exception $e) {
+            $totalVisits = $userStats = null;
+        }
         return $this->render('stats/index.html.twig', [
             'user_stats' => $userStats,
             'total_visit' => $totalVisits

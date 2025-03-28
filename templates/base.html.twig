@@ -1,17 +1,132 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symfony & Redis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 80px 20px 20px;
+            text-align: justify;
+        }
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+        .navbar {
+            background-color: #66b3ff;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+
+        .navbar a:hover {
+            background-color: #ff4438;
+            border-radius: 5px;
+        }
+
+        /* Menu burger pour mobile */
+        .burger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .menu.active {
+                display: flex;
+            }
+
+            .burger {
+                display: block;
+            }
+        }
+
+
+        h1 {
+            color: #ff4438;
+            text-align: center;
+        }
+
+        p, ul {
+            line-height: 1.8;
+        }
+
+        .stat-card-total {
+            background-color: #DC382D;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 50%;
+            margin: 20px auto;
+            border-radius: 8px;
+        }
+
+        .stat-cards-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background-color: #DC382D;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 200px;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span class="burger">&#9776;</span>
+        <div class="menu">
+            <a href={{path('home')}}>Accueil</a>
+            <a href={{path('page_1')}}>Page 1</a>
+            <a href={{path('page_2')}}>Page 2</a>
+            <a href={{path('app_stats')}}>Stats</a>
+        </div>
+    </div>
+    <div class="container">
         {% block body %}{% endblock %}
-    </body>
+    </div>
+</body>
+<script>
+    document.querySelector('.burger').addEventListener('click', function() {
+        document.querySelector('.menu').classList.toggle('active');
+    });
+</script>
 </html>

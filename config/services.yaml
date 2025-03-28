@@ -21,10 +21,18 @@ services:
             - '../src/Kernel.php'
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
-        arguments: ['@snc_redis.session']
+        arguments: 
+        - '@snc_redis.session'
+        - { ttl : 86400}
 
     Predis\ClientInterface:
         alias: snc_redis.default
+
+    monolog.pdo_handler:
+        class: Monolog\Handler\PDOHandler
+        arguments:
+            $pdo: '@database_connection'  # Assure-toi d'avoir ce service configuré
+            $statement: "INSERT INTO symfony_logs (channel, level, message, time, context) VALUES (?, ?, ?, ?, ?)"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

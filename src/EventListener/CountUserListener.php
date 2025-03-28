@@ -32,18 +32,23 @@ final class CountUserListener
         $idSession = $session->getId();
         // On commence les ajouts avec redis
         // On incrémente le nombre total de visite
-        $this->client->incr('visit:total');
-        // Pour chaque utilisateur, on ajoute la dernière page visitée et l'heure à laquelle l'utilisateur a visité la page
-        // C'est effectué uniquement si l'utilisateur a une session
-        if (!empty($idSession)) {
-            $this->client
-                ->hmset('visit:'.$idSession, [
-                    'lastPage' => $pathInfo,
-                    'lastVisit' => (new \DateTime())->format('Y-m-d H:i')
-                ]);
-            $this->client->hincrby('visit:'.$idSession,'totalPage',1);
+        try {
+            $this->client->incr('visit:total');
+            // Pour chaque utilisateur, on ajoute la dernière page visitée et l'heure à laquelle l'utilisateur a visité la page
+            // C'est effectué uniquement si l'utilisateur a une session
+            if (!empty($idSession)) {
+                $this->client
+                    ->hmset('visit:'.$idSession, [
+                        'lastPage' => $pathInfo,
+                        'lastVisit' => (new \DateTime())->format('Y-m-d H:i')
+                    ]);
+                $this->client->hincrby('visit:'.$idSession, 'totalPage', 1);
+                $this->client->expire('visit:'.$idSession, 86400, 'NX');
+            }
+            // On ajoute l'adresse IP dans le set
+            $this->client->sAdd('visit:ids', $ipUser);
+        } catch (\Exception $e) {
+            //Ici, on pourrait mettre en place un système d'emailing d'alerte et de monitoring
         }
-        // On ajoute l'adresse IP dans le set
-        $this->client->sAdd('visit:ids', $ipUser);
     }
 }
